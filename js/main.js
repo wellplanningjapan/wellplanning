@@ -23,10 +23,10 @@ async function loadPackages() {
         // カスタム画像URLを設定
         allPackages.forEach(pkg => {
             if (pkg.id === 'package_2' || pkg.name.includes('スタンダード')) {
-                pkg.image_url = 'https://page.gensparksite.com/v1/base64_upload/ff26f281f12d318377a1d0e91169faae';
+                pkg.image_url = 'images/hotel-room.jpg';
             }
             if (pkg.id === 'package_3' || pkg.name.includes('プレミアム')) {
-                pkg.image_url = 'https://page.gensparksite.com/v1/base64_upload/ff26f281f12d318377a1d0e91169faae';
+                pkg.image_url = 'images/hotel-room.jpg';
             }
         });
         

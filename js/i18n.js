@@ -133,19 +133,49 @@ class I18n {
 
     // パッケージ名を翻訳
     translatePackageName(packageId, defaultName) {
+        // まずpackageIdで検索
         if (packageTranslations[this.currentLanguage] && 
             packageTranslations[this.currentLanguage][packageId]) {
             return packageTranslations[this.currentLanguage][packageId].name;
         }
+        
+        // IDが一致しない場合、名前でパターンマッチング
+        if (this.currentLanguage === 'en') {
+            if (defaultName.includes('スターター') || defaultName.includes('Starter')) {
+                return packageTranslations.en['package_1'].name;
+            }
+            if (defaultName.includes('スタンダード') || defaultName.includes('Standard')) {
+                return packageTranslations.en['package_2'].name;
+            }
+            if (defaultName.includes('プレミアム') || defaultName.includes('Premium')) {
+                return packageTranslations.en['package_3'].name;
+            }
+        }
+        
         return defaultName;
     }
 
     // パッケージ説明を翻訳
     translatePackageDescription(packageId, defaultDescription) {
+        // まずpackageIdで検索
         if (packageTranslations[this.currentLanguage] && 
             packageTranslations[this.currentLanguage][packageId]) {
             return packageTranslations[this.currentLanguage][packageId].description;
         }
+        
+        // IDが一致しない場合、説明文でパターンマッチング
+        if (this.currentLanguage === 'en') {
+            if (defaultDescription.includes('新生活を始める') || defaultDescription.includes('必要最低限') || defaultDescription.includes('basic set')) {
+                return packageTranslations.en['package_1'].description;
+            }
+            if (defaultDescription.includes('充実した生活') || defaultDescription.includes('リビング、寝室、キッチン') || defaultDescription.includes('fulfilling life')) {
+                return packageTranslations.en['package_2'].description;
+            }
+            if (defaultDescription.includes('ホテルライクな暮らしを完璧') || defaultDescription.includes('全ての家具・家電') || defaultDescription.includes('perfectly recreates')) {
+                return packageTranslations.en['package_3'].description;
+            }
+        }
+        
         return defaultDescription;
     }
 
