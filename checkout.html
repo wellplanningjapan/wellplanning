@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ご注文手続き - Well Planning</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/checkout.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header class="header">
+        <div class="container">
+            <nav class="nav">
+                <div class="logo">
+                    <a href="index.html">
+                        <h1>Well Planning</h1>
+                        <p class="logo-subtitle">ホテルライクな暮らしを</p>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- チェックアウトセクション -->
+    <section class="checkout-section">
+        <div class="container">
+            <div class="checkout-steps">
+                <div class="step active">
+                    <div class="step-number">1</div>
+                    <div class="step-label">お客様情報</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-label">配送情報</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-label">お支払い方法</div>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <div class="step-label">注文確認</div>
+                </div>
+            </div>
+
+            <div class="checkout-content">
+                <div class="checkout-form-container">
+                    <form id="checkout-form">
+                        <!-- お客様情報 -->
+                        <div class="form-section active" id="customer-info">
+                            <h2>お客様情報</h2>
+                            <div class="form-group">
+                                <label for="name">お名前 <span class="required">*</span></label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email">メールアドレス <span class="required">*</span></label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">電話番号 <span class="required">*</span></label>
+                                <input type="tel" id="phone" name="phone" required>
+                            </div>
+                            <button type="button" class="btn btn-primary next-btn" data-next="shipping-info">
+                                次へ <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- 配送情報 -->
+                        <div class="form-section" id="shipping-info">
+                            <h2>配送情報</h2>
+                            <div class="form-group">
+                                <label for="postal-code">郵便番号 <span class="required">*</span></label>
+                                <input type="text" id="postal-code" name="postalCode" placeholder="123-4567" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="prefecture">都道府県 <span class="required">*</span></label>
+                                <select id="prefecture" name="prefecture" required>
+                                    <option value="">選択してください</option>
+                                    <option value="東京都">東京都</option>
+                                    <option value="神奈川県">神奈川県</option>
+                                    <option value="千葉県">千葉県</option>
+                                    <option value="埼玉県">埼玉県</option>
+                                    <option value="大阪府">大阪府</option>
+                                    <option value="愛知県">愛知県</option>
+                                    <option value="福岡県">福岡県</option>
+                                    <!-- 他の都道府県も追加可能 -->
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">市区町村 <span class="required">*</span></label>
+                                <input type="text" id="city" name="city" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="address">番地・建物名 <span class="required">*</span></label>
+                                <input type="text" id="address" name="address" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="delivery-date">配送希望日</label>
+                                <input type="date" id="delivery-date" name="deliveryDate">
+                            </div>
+                            <div class="form-buttons">
+                                <button type="button" class="btn btn-secondary prev-btn" data-prev="customer-info">
+                                    <i class="fas fa-arrow-left"></i> 戻る
+                                </button>
+                                <button type="button" class="btn btn-primary next-btn" data-next="payment-info">
+                                    次へ <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- お支払い方法 -->
+                        <div class="form-section" id="payment-info">
+                            <h2>お支払い方法</h2>
+                            <div class="payment-methods">
+                                <label class="payment-method">
+                                    <input type="radio" name="payment" value="credit-card" checked>
+                                    <div class="payment-option">
+                                        <i class="fas fa-credit-card"></i>
+                                        <span>クレジットカード</span>
+                                    </div>
+                                </label>
+                                <label class="payment-method">
+                                    <input type="radio" name="payment" value="bank-transfer">
+                                    <div class="payment-option">
+                                        <i class="fas fa-university"></i>
+                                        <span>銀行振込</span>
+                                    </div>
+                                </label>
+                                <label class="payment-method">
+                                    <input type="radio" name="payment" value="convenience-store">
+                                    <div class="payment-option">
+                                        <i class="fas fa-store"></i>
+                                        <span>コンビニ決済</span>
+                                    </div>
+                                </label>
+                                <label class="payment-method">
+                                    <input type="radio" name="payment" value="cash-on-delivery">
+                                    <div class="payment-option">
+                                        <i class="fas fa-money-bill-wave"></i>
+                                        <span>代金引換</span>
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="form-buttons">
+                                <button type="button" class="btn btn-secondary prev-btn" data-prev="shipping-info">
+                                    <i class="fas fa-arrow-left"></i> 戻る
+                                </button>
+                                <button type="button" class="btn btn-primary next-btn" data-next="order-confirm">
+                                    次へ <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 注文確認 -->
+                        <div class="form-section" id="order-confirm">
+                            <h2>注文確認</h2>
+                            <div class="confirm-section">
+                                <h3>お客様情報</h3>
+                                <div id="confirm-customer" class="confirm-details"></div>
+                            </div>
+                            <div class="confirm-section">
+                                <h3>配送先</h3>
+                                <div id="confirm-shipping" class="confirm-details"></div>
+                            </div>
+                            <div class="confirm-section">
+                                <h3>お支払い方法</h3>
+                                <div id="confirm-payment" class="confirm-details"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="terms" required>
+                                    <span>利用規約とプライバシーポリシーに同意する</span>
+                                </label>
+                            </div>
+                            <div class="form-buttons">
+                                <button type="button" class="btn btn-secondary prev-btn" data-prev="payment-info">
+                                    <i class="fas fa-arrow-left"></i> 戻る
+                                </button>
+                                <button type="submit" class="btn btn-accent">
+                                    <i class="fas fa-check"></i> 注文を確定する
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- 注文サマリー -->
+                <div class="order-summary">
+                    <h3>ご注文内容</h3>
+                    <div id="order-items" class="order-items">
+                        <!-- カートアイテムが表示されます -->
+                    </div>
+                    <div class="summary-row">
+                        <span>小計</span>
+                        <span id="summary-subtotal">¥0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>配送料</span>
+                        <span id="summary-shipping">¥0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>消費税</span>
+                        <span id="summary-tax">¥0</span>
+                    </div>
+                    <div class="summary-divider"></div>
+                    <div class="summary-row total">
+                        <span>合計</span>
+                        <span id="summary-total">¥0</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 成功モーダル -->
+    <div id="success-modal" class="modal">
+        <div class="modal-content">
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h2>ご注文ありがとうございます！</h2>
+            <p>注文番号: <span id="order-number"></span></p>
+            <p>ご登録いただいたメールアドレスに確認メールをお送りしました。</p>
+            <a href="index.html" class="btn btn-primary">トップページへ戻る</a>
+        </div>
+    </div>
+
+    <!-- フッター -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Well Planning</h3>
+                    <p>ホテルライクな暮らしを、初日から。</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Well Planning. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/cart.js"></script>
+    <script src="js/checkout.js"></script>
+</body>
+</html>
