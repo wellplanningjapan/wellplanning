@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パッケージテスト - Well Planning</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        h1 {
+            color: #8B7355;
+        }
+        .status {
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .success {
+            border-left: 4px solid #4CAF50;
+        }
+        .error {
+            border-left: 4px solid #f44336;
+        }
+        .warning {
+            border-left: 4px solid #ff9800;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #8B7355;
+            color: white;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            overflow-x: auto;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 18px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 Well Planning - パッケージデータテスト</h1>
+    <div id="result" class="loading">データを読み込んでいます...</div>
+
+    <script>
+        async function testPackages() {
+            const resultDiv = document.getElementById('result');
+            let html = '';
+
+            try {
+                // テスト1: API接続確認
+                html += '<div class="status warning">';
+                html += '<h2>📡 テスト1: API接続確認</h2>';
+                html += '<p>APIエンドポイントに接続しています...</p>';
+                html += '</div>';
+
+                const response = await fetch('tables/packages?limit=100');
+                
+                html += '<div class="status ' + (response.ok ? 'success' : 'error') + '">';
+                html += '<h2>📊 レスポンスステータス</h2>';
+                html += `<p><strong>Status Code:</strong> ${response.status}</p>`;
+                html += `<p><strong>Status Text:</strong> ${response.statusText}</p>`;
+                html += `<p><strong>OK:</strong> ${response.ok ? '✅ 成功' : '❌ 失敗'}</p>`;
+                html += '</div>';
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // テスト2: データ取得
+                const data = await response.json();
+                const packages = data.data || [];
+
+                html += '<div class="status ' + (packages.length > 0 ? 'success' : 'warning') + '">';
+                html += '<h2>📦 テスト2: パッケージデータ</h2>';
+                html += `<p><strong>取得したパッケージ数:</strong> ${packages.length}件</p>`;
+                
+                if (packages.length === 0) {
+                    html += '<p style="color: orange;">⚠️ パッケージデータが見つかりません。データベースにデータを追加する必要があります。</p>';
+                } else {
+                    html += '<p style="color: green;">✅ パッケージデータが正常に取得できました！</p>';
+                }
+                html += '</div>';
+
+                // テスト3: パッケージ詳細表示
+                if (packages.length > 0) {
+                    html += '<div class="status success">';
+                    html += '<h2>📋 テスト3: パッケージ詳細</h2>';
+                    html += '<table>';
+                    html += '<tr><th>ID</th><th>名前</th><th>価格</th><th>説明</th><th>画像URL</th><th>商品数</th></tr>';
+                    
+                    packages.forEach(pkg => {
+                        html += '<tr>';
+                        html += `<td><strong>${pkg.id || 'なし'}</strong></td>`;
+                        html += `<td>${pkg.name || 'なし'}</td>`;
+                        html += `<td>¥${pkg.price ? pkg.price.toLocaleString() : 0}</td>`;
+                        html += `<td>${pkg.description ? pkg.description.substring(0, 50) + '...' : 'なし'}</td>`;
+                        html += `<td>${pkg.image_url || 'なし'}</td>`;
+                        html += `<td>${pkg.items ? pkg.items.length : 0}点</td>`;
+                        html += '</tr>';
+                    });
+                    
+                    html += '</table>';
+                    html += '</div>';
+                }
+
+                // テスト4: 完全なJSONデータ
+                html += '<div class="status success">';
+                html += '<h2>🔤 テスト4: 完全なJSONレスポンス</h2>';
+                html += '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                html += '</div>';
+
+                // テスト5: 推奨アクション
+                html += '<div class="status success">';
+                html += '<h2>✅ 推奨アクション</h2>';
+                if (packages.length === 0) {
+                    html += '<p><strong>問題:</strong> パッケージデータがデータベースに登録されていません。</p>';
+                    html += '<p><strong>解決策:</strong> Gensparkのチャットに戻って「パッケージデータを登録してください」と伝えてください。</p>';
+                } else {
+                    html += '<p><strong>データは正常です！</strong></p>';
+                    html += '<p>トップページ (index.html) で以下を確認してください：</p>';
+                    html += '<ul>';
+                    html += '<li>ブラウザのキャッシュをクリア (Ctrl+Shift+R)</li>';
+                    html += '<li>F12でコンソールを開いてJavaScriptエラーを確認</li>';
+                    html += '<li>js/main.js が正しく読み込まれているか確認</li>';
+                    html += '</ul>';
+                }
+                html += '<p><a href="index.html" style="color: #8B7355; font-weight: bold;">← トップページに戻る</a></p>';
+                html += '</div>';
+
+            } catch (error) {
+                html += '<div class="status error">';
+                html += '<h2>❌ エラーが発生しました</h2>';
+                html += `<p><strong>エラーメッセージ:</strong></p>`;
+                html += `<pre>${error.message}\n\n${error.stack}</pre>`;
+                html += '<p><strong>考えられる原因:</strong></p>';
+                html += '<ul>';
+                html += '<li>データベーステーブルが存在しない</li>';
+                html += '<li>API接続の問題</li>';
+                html += '<li>CORS（クロスオリジン）エラー</li>';
+                html += '</ul>';
+                html += '</div>';
+            }
+
+            resultDiv.innerHTML = html;
+        }
+
+        testPackages();
+    </script>
+</body>
+</html>

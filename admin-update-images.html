@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>パッケージ画像更新 - Well Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5dc 0%, #d2b48c 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #8B7355;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            color: #1565c0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        .info-box h3 {
+            margin-bottom: 10px;
+            color: #1565c0;
+        }
+        .info-box code {
+            background: #bbdefb;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+        .package-section {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #8B7355;
+        }
+        .package-section h2 {
+            color: #8B7355;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #8B7355;
+        }
+        .preview {
+            margin-top: 15px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+        }
+        .preview img {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .preview.error {
+            border-color: #f44336;
+            color: #f44336;
+        }
+        .btn {
+            background: #8B7355;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .btn:hover {
+            background: #6d5a43;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-preview {
+            background: #2196F3;
+            width: auto;
+            padding: 10px 20px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .btn-preview:hover {
+            background: #1976D2;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        .status.show {
+            display: block;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .update-all-btn {
+            background: linear-gradient(135deg, #8B7355 0%, #6d5a43 100%);
+            font-size: 18px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖼️ パッケージ画像の更新</h1>
+        <p class="subtitle">各パッケージの画像URLを更新します</p>
+
+        <div class="info-box">
+            <h3>📝 使い方</h3>
+            <p><strong>ステップ1:</strong> GitHubの <code>images/</code> フォルダに画像をアップロード</p>
+            <p><strong>ステップ2:</strong> 下記の入力欄に画像のパス（例: <code>images/package-premium.jpg</code>）を入力</p>
+            <p><strong>ステップ3:</strong> 「プレビュー」ボタンで画像を確認</p>
+            <p><strong>ステップ4:</strong> 「すべてのパッケージ画像を更新」ボタンをクリック</p>
+        </div>
+
+        <!-- スターターパッケージ -->
+        <div class="package-section">
+            <h2>📦 スターターパッケージ</h2>
+            <div class="form-group">
+                <label for="starter-image">画像URL:</label>
+                <input type="text" id="starter-image" value="images/hotel-room.jpg" placeholder="images/package-starter.jpg">
+                <button class="btn btn-preview" onclick="previewImage('starter')">プレビュー</button>
+            </div>
+            <div id="starter-preview" class="preview">
+                プレビューするには「プレビュー」ボタンをクリック
+            </div>
+        </div>
+
+        <!-- スタンダードパッケージ -->
+        <div class="package-section">
+            <h2>📦 スタンダードパッケージ</h2>
+            <div class="form-group">
+                <label for="standard-image">画像URL:</label>
+                <input type="text" id="standard-image" value="images/hotel-room.jpg" placeholder="images/package-standard.jpg">
+                <button class="btn btn-preview" onclick="previewImage('standard')">プレビュー</button>
+            </div>
+            <div id="standard-preview" class="preview">
+                プレビューするには「プレビュー」ボタンをクリック
+            </div>
+        </div>
+
+        <!-- プレミアムパッケージ -->
+        <div class="package-section">
+            <h2>📦 プレミアムパッケージ</h2>
+            <div class="form-group">
+                <label for="premium-image">画像URL:</label>
+                <input type="text" id="premium-image" value="images/hotel-room.jpg" placeholder="images/package-premium.jpg">
+                <button class="btn btn-preview" onclick="previewImage('premium')">プレビュー</button>
+            </div>
+            <div id="premium-preview" class="preview">
+                プレビューするには「プレビュー」ボタンをクリック
+            </div>
+        </div>
+
+        <!-- 更新ボタン -->
+        <button id="update-btn" class="btn update-all-btn" onclick="updateAllPackages()">
+            すべてのパッケージ画像を更新
+        </button>
+
+        <div id="status" class="status"></div>
+
+        <!-- 完了後 -->
+        <div class="package-section" style="display: none;" id="complete-section">
+            <h2>✅ 更新完了！</h2>
+            <p>パッケージ画像の更新が完了しました。トップページで確認してください。</p>
+            <button onclick="window.location.href='index.html'" class="btn">トップページへ</button>
+        </div>
+    </div>
+
+    <script>
+        function previewImage(packageType) {
+            const input = document.getElementById(`${packageType}-image`);
+            const preview = document.getElementById(`${packageType}-preview`);
+            const imageUrl = input.value.trim();
+
+            if (!imageUrl) {
+                preview.className = 'preview error';
+                preview.innerHTML = '❌ 画像URLを入力してください';
+                return;
+            }
+
+            preview.className = 'preview';
+            preview.innerHTML = `
+                <p>読み込み中...</p>
+                <img src="${imageUrl}" onerror="this.parentElement.className='preview error'; this.parentElement.innerHTML='❌ 画像が読み込めません。URLを確認してください。'" onload="this.parentElement.innerHTML='✅ 画像を読み込みました<br>' + this.outerHTML">
+            `;
+        }
+
+        async function updateAllPackages() {
+            const btn = document.getElementById('update-btn');
+            const status = document.getElementById('status');
+            
+            btn.disabled = true;
+            btn.textContent = '更新中...';
+
+            const starterUrl = document.getElementById('starter-image').value.trim();
+            const standardUrl = document.getElementById('standard-image').value.trim();
+            const premiumUrl = document.getElementById('premium-image').value.trim();
+
+            if (!starterUrl || !standardUrl || !premiumUrl) {
+                status.className = 'status error show';
+                status.textContent = '❌ すべての画像URLを入力してください';
+                btn.disabled = false;
+                btn.textContent = 'すべてのパッケージ画像を更新';
+                return;
+            }
+
+            try {
+                // パッケージIDと画像URLのマッピング
+                const updates = [
+                    { id: 'package_1', name: 'スターター', url: starterUrl },
+                    { id: 'package_2', name: 'スタンダード', url: standardUrl },
+                    { id: 'package_3', name: 'プレミアム', url: premiumUrl }
+                ];
+
+                for (const update of updates) {
+                    console.log(`${update.name}パッケージを更新中...`);
+                    
+                    // 既存データを取得
+                    const getResponse = await fetch(`tables/packages/${update.id}`);
+                    if (!getResponse.ok) {
+                        throw new Error(`${update.name}パッケージが見つかりません`);
+                    }
+                    const packageData = await getResponse.json();
+
+                    // 画像URLを更新
+                    packageData.image_url = update.url;
+
+                    // データを更新
+                    const updateResponse = await fetch(`tables/packages/${update.id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(packageData)
+                    });
+
+                    if (!updateResponse.ok) {
+                        throw new Error(`${update.name}パッケージの更新に失敗しました`);
+                    }
+
+                    console.log(`✓ ${update.name}パッケージを更新しました`);
+                }
+
+                status.className = 'status success show';
+                status.innerHTML = `
+                    <strong>✅ すべてのパッケージ画像を更新しました！</strong><br>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>スターター: ${starterUrl}</li>
+                        <li>スタンダード: ${standardUrl}</li>
+                        <li>プレミアム: ${premiumUrl}</li>
+                    </ul>
+                `;
+                btn.textContent = '✓ 更新完了';
+                document.getElementById('complete-section').style.display = 'block';
+
+            } catch (error) {
+                status.className = 'status error show';
+                status.textContent = '❌ エラー: ' + error.message;
+                btn.disabled = false;
+                btn.textContent = 'すべてのパッケージ画像を更新';
+                console.error('Update error:', error);
+            }
+        }
+    </script>
+</body>
+</html>

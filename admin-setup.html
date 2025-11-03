@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>データセットアップ - Well Planning</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5dc 0%, #d2b48c 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        h1 {
+            color: #8B7355;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .section {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid #8B7355;
+        }
+        h2 {
+            color: #8B7355;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        .btn {
+            background: #8B7355;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+        .btn:hover {
+            background: #6d5a43;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(139, 115, 85, 0.3);
+        }
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+        .status.show {
+            display: block;
+        }
+        .status.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .status.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .status.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+        .info-box {
+            background: #fff3cd;
+            border: 1px solid #ffeeba;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .progress {
+            margin-top: 15px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #8B7355 0%, #6d5a43 100%);
+            width: 0%;
+            transition: width 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .log {
+            background: #2d2d2d;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+            display: none;
+        }
+        .log.show {
+            display: block;
+        }
+        .log-line {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛠️ Well Planning データセットアップ</h1>
+        <p class="subtitle">このページで、パッケージと商品のデータをデータベースに登録します。</p>
+
+        <div class="info-box">
+            <strong>⚠️ 重要:</strong> このボタンは1回だけ実行してください。データが登録されます。
+        </div>
+
+        <!-- パッケージデータ登録 -->
+        <div class="section">
+            <h2>📦 ステップ1: パッケージデータを登録</h2>
+            <p>3つのパッケージ（スターター、スタンダード、プレミアム）をデータベースに登録します。</p>
+            <button id="setup-packages-btn" class="btn">パッケージデータを登録</button>
+            <div id="packages-status" class="status"></div>
+        </div>
+
+        <!-- 商品データ登録 -->
+        <div class="section">
+            <h2>🪑 ステップ2: 商品データを登録</h2>
+            <p>12個の商品（家具5点 + 家電7点）をデータベースに登録します。</p>
+            <button id="setup-products-btn" class="btn">商品データを登録</button>
+            <div id="products-status" class="status"></div>
+        </div>
+
+        <!-- 進捗表示 -->
+        <div class="progress" id="progress-container" style="display: none;">
+            <h3>進捗状況</h3>
+            <div class="progress-bar">
+                <div id="progress-fill" class="progress-fill">0%</div>
+            </div>
+        </div>
+
+        <!-- ログ表示 -->
+        <div id="log" class="log"></div>
+
+        <!-- 完了後のアクション -->
+        <div class="section" style="display: none;" id="complete-section">
+            <h2>✅ セットアップ完了！</h2>
+            <p>データベースへの登録が完了しました。トップページでパッケージが表示されます。</p>
+            <button onclick="window.location.href='index.html'" class="btn">トップページへ移動</button>
+        </div>
+    </div>
+
+    <script>
+        const log = document.getElementById('log');
+        
+        function addLog(message, type = 'info') {
+            log.classList.add('show');
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            const timestamp = new Date().toLocaleTimeString();
+            line.textContent = `[${timestamp}] ${message}`;
+            log.appendChild(line);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function showStatus(elementId, message, type) {
+            const statusEl = document.getElementById(elementId);
+            statusEl.className = `status ${type} show`;
+            statusEl.textContent = message;
+        }
+
+        function updateProgress(percent) {
+            const progressContainer = document.getElementById('progress-container');
+            const progressFill = document.getElementById('progress-fill');
+            progressContainer.style.display = 'block';
+            progressFill.style.width = percent + '%';
+            progressFill.textContent = Math.round(percent) + '%';
+        }
+
+        // パッケージデータ
+        const packagesData = [
+            {
+                id: 'package_1',
+                name: 'スターターパッケージ',
+                description: '新生活を始める方に最適な基本セット。必要最低限の家具・家電を揃えました。',
+                price: 350000,
+                items: ['product_3', 'product_5', 'product_6', 'product_7', 'product_8'],
+                image_url: 'https://raw.githubusercontent.com/wellplanningjapan/wellplanning/main/images/hotel-room.jpg',
+                featured: true
+            },
+            {
+                id: 'package_2',
+                name: 'スタンダードパッケージ',
+                description: '充実した生活を送るための充実セット。リビング、寝室、キッチンの基本を網羅します。',
+                price: 650000,
+                items: ['product_1', 'product_3', 'product_4', 'product_5', 'product_6', 'product_7', 'product_8', 'product_9', 'product_10'],
+                image_url: 'https://raw.githubusercontent.com/wellplanningjapan/wellplanning/main/images/hotel-room.jpg',
+                featured: true
+            },
+            {
+                id: 'package_3',
+                name: 'プレミアムパッケージ',
+                description: 'ホテルライクな暮らしを完璧に再現するプレミアムセット。全ての家具・家電が含まれています。',
+                price: 1100000,
+                items: ['product_1', 'product_2', 'product_3', 'product_4', 'product_5', 'product_6', 'product_7', 'product_8', 'product_9', 'product_10', 'product_11', 'product_12'],
+                image_url: 'https://raw.githubusercontent.com/wellplanningjapan/wellplanning/main/images/hotel-room.jpg',
+                featured: true
+            }
+        ];
+
+        // 商品データ
+        const productsData = [
+            {
+                id: 'product_1',
+                name: 'モダンソファ',
+                category: 'furniture',
+                subcategory: 'リビング',
+                price: 89000,
+                description: 'ホテルライクな空間を演出する上質なモダンソファ。ゆったりとした座り心地と洗練されたデザインが特徴です。',
+                image_url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800',
+                stock: 15,
+                featured: true
+            },
+            {
+                id: 'product_2',
+                name: 'ワークデスク',
+                category: 'furniture',
+                subcategory: 'オフィス',
+                price: 45000,
+                description: 'シンプルで機能的なワークデスク。在宅勤務にも最適な広々とした作業スペースを提供します。',
+                image_url: 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800',
+                stock: 20,
+                featured: false
+            },
+            {
+                id: 'product_3',
+                name: 'プレミアムベッド',
+                category: 'furniture',
+                subcategory: '寝室',
+                price: 120000,
+                description: '上質な睡眠を約束するプレミアムベッド。マットレス付きで快適な眠りをサポートします。',
+                image_url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800',
+                stock: 10,
+                featured: true
+            },
+            {
+                id: 'product_4',
+                name: 'ダイニングテーブルセット',
+                category: 'furniture',
+                subcategory: 'ダイニング',
+                price: 75000,
+                description: '4人掛けのダイニングテーブルとチェアのセット。家族での食事時間を豊かにします。',
+                image_url: 'https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800',
+                stock: 12,
+                featured: false
+            },
+            {
+                id: 'product_5',
+                name: 'テレビボード',
+                category: 'furniture',
+                subcategory: 'リビング',
+                price: 35000,
+                description: 'シンプルで収納力のあるテレビボード。リビングをスッキリと整理整頓できます。',
+                image_url: 'https://images.unsplash.com/photo-1594026112284-02bb6f3352fe?w=800',
+                stock: 18,
+                featured: false
+            },
+            {
+                id: 'product_6',
+                name: '冷蔵庫（300L）',
+                category: 'appliance',
+                subcategory: 'キッチン家電',
+                price: 65000,
+                description: 'エネルギー効率の高い300L冷蔵庫。静音設計で快適な生活をサポートします。',
+                image_url: 'https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=800',
+                stock: 25,
+                featured: true
+            },
+            {
+                id: 'product_7',
+                name: '電子レンジ',
+                category: 'appliance',
+                subcategory: 'キッチン家電',
+                price: 18000,
+                description: '多機能電子レンジ。オーブン機能付きで料理の幅が広がります。',
+                image_url: 'https://images.unsplash.com/photo-1585659722983-3a675dabf23d?w=800',
+                stock: 30,
+                featured: false
+            },
+            {
+                id: 'product_8',
+                name: '洗濯機（8kg）',
+                category: 'appliance',
+                subcategory: '生活家電',
+                price: 55000,
+                description: '静音設計の全自動洗濯機。省エネ機能搭載で経済的です。',
+                image_url: 'https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=800',
+                stock: 20,
+                featured: false
+            },
+            {
+                id: 'product_9',
+                name: '掃除機',
+                category: 'appliance',
+                subcategory: '生活家電',
+                price: 28000,
+                description: 'コードレススティック掃除機。軽量で取り回しやすく、毎日の掃除が楽になります。',
+                image_url: 'https://images.unsplash.com/photo-1558317374-067fb5f30001?w=800',
+                stock: 22,
+                featured: false
+            },
+            {
+                id: 'product_10',
+                name: 'エアコン',
+                category: 'appliance',
+                subcategory: '空調家電',
+                price: 85000,
+                description: '省エネ性能の高いエアコン。一年中快適な室温を保ちます。',
+                image_url: 'https://images.unsplash.com/photo-1631545806609-50c1e06d0c10?w=800',
+                stock: 15,
+                featured: true
+            },
+            {
+                id: 'product_11',
+                name: 'ドライヤー',
+                category: 'appliance',
+                subcategory: '生活家電',
+                price: 8500,
+                description: '速乾性の高いプロ仕様ドライヤー。髪に優しいイオン機能付き。',
+                image_url: 'https://images.unsplash.com/photo-1522338140262-f46f5913618a?w=800',
+                stock: 35,
+                featured: false
+            },
+            {
+                id: 'product_12',
+                name: '電源タップ（6口）',
+                category: 'appliance',
+                subcategory: 'その他',
+                price: 2500,
+                description: '安全設計の電源タップ。個別スイッチ付きで便利です。',
+                image_url: 'https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?w=800',
+                stock: 50,
+                featured: false
+            }
+        ];
+
+        // パッケージデータ登録
+        document.getElementById('setup-packages-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('setup-packages-btn');
+            btn.disabled = true;
+            btn.textContent = '登録中...';
+            
+            addLog('パッケージデータの登録を開始します...');
+            updateProgress(0);
+
+            try {
+                for (let i = 0; i < packagesData.length; i++) {
+                    const pkg = packagesData[i];
+                    addLog(`パッケージ ${i + 1}/3 を登録中: ${pkg.name}`);
+                    
+                    const response = await fetch('tables/packages', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(pkg)
+                    });
+
+                    if (response.ok) {
+                        addLog(`✓ ${pkg.name} を登録しました`);
+                    } else {
+                        throw new Error(`Failed to add ${pkg.name}`);
+                    }
+
+                    updateProgress(((i + 1) / packagesData.length) * 100);
+                }
+
+                showStatus('packages-status', '✅ パッケージデータの登録が完了しました！', 'success');
+                addLog('=== パッケージデータの登録完了 ===');
+                btn.textContent = '✓ 登録完了';
+                
+                // 商品登録ボタンを有効化
+                document.getElementById('setup-products-btn').disabled = false;
+                
+            } catch (error) {
+                showStatus('packages-status', '❌ エラー: ' + error.message, 'error');
+                addLog('エラーが発生しました: ' + error.message);
+                btn.disabled = false;
+                btn.textContent = 'パッケージデータを登録';
+            }
+        });
+
+        // 商品データ登録
+        document.getElementById('setup-products-btn').addEventListener('click', async () => {
+            const btn = document.getElementById('setup-products-btn');
+            btn.disabled = true;
+            btn.textContent = '登録中...';
+            
+            addLog('商品データの登録を開始します...');
+            updateProgress(0);
+
+            try {
+                for (let i = 0; i < productsData.length; i++) {
+                    const product = productsData[i];
+                    addLog(`商品 ${i + 1}/12 を登録中: ${product.name}`);
+                    
+                    const response = await fetch('tables/products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(product)
+                    });
+
+                    if (response.ok) {
+                        addLog(`✓ ${product.name} を登録しました`);
+                    } else {
+                        throw new Error(`Failed to add ${product.name}`);
+                    }
+
+                    updateProgress(((i + 1) / productsData.length) * 100);
+                }
+
+                showStatus('products-status', '✅ 商品データの登録が完了しました！', 'success');
+                addLog('=== 商品データの登録完了 ===');
+                addLog('すべてのデータ登録が完了しました！');
+                btn.textContent = '✓ 登録完了';
+                
+                // 完了セクションを表示
+                document.getElementById('complete-section').style.display = 'block';
+                
+            } catch (error) {
+                showStatus('products-status', '❌ エラー: ' + error.message, 'error');
+                addLog('エラーが発生しました: ' + error.message);
+                btn.disabled = false;
+                btn.textContent = '商品データを登録';
+            }
+        });
+
+        // 初期状態: 商品登録ボタンを無効化
+        document.getElementById('setup-products-btn').disabled = true;
+    </script>
+</body>
+</html>
