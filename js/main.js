@@ -1,4 +1,6 @@
-// メインページのJavaScript
+allPackages.forEach(pkg => {
+    pkg.image_url = 'https://www.wellplanningjapan.com/images/hotel-room.jpg';
+});// メインページのJavaScript
 
 let allProducts = [];
 let allPackages = [];
