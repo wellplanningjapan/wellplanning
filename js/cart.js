@@ -46,7 +46,11 @@ class Cart {
         }
         
         this.saveCart();
-        this.showNotification(`${product.name}をカートに追加しました`);
+        const productName = typeof i18n !== 'undefined' ? i18n.translateProductName(product.id, product.name) : product.name;
+        const message = typeof i18n !== 'undefined' ? 
+            `${productName}${i18n.translate('message.addedToCart')}` : 
+            `${product.name}をカートに追加しました`;
+        this.showNotification(message);
     }
 
     // パッケージを追加
@@ -67,7 +71,11 @@ class Cart {
         }
         
         this.saveCart();
-        this.showNotification(`${pkg.name}をカートに追加しました`);
+        const packageName = typeof i18n !== 'undefined' ? i18n.translatePackageName(pkg.id, pkg.name) : pkg.name;
+        const message = typeof i18n !== 'undefined' ? 
+            `${packageName}${i18n.translate('message.addedToCart')}` : 
+            `${pkg.name}をカートに追加しました`;
+        this.showNotification(message);
     }
 
     // 商品を削除

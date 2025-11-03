@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ショッピングカート - Well Planning</title>
+    <title>商品詳細 - Well Planning</title>
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/cart.css">
+    <link rel="stylesheet" href="css/product.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
@@ -23,7 +23,6 @@
                 <ul class="nav-menu">
                     <li><a href="index.html#home">ホーム</a></li>
                     <li><a href="index.html#packages">パッケージ</a></li>
-                    <li><a href="index.html#products">商品一覧</a></li>
                     <li><a href="index.html#about">私たちについて</a></li>
                     <li><a href="cart.html" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
@@ -39,49 +38,24 @@
         </div>
     </header>
 
-    <!-- カートセクション -->
-    <section class="cart-section">
+    <!-- 商品詳細セクション -->
+    <section class="product-detail-section">
         <div class="container">
-            <h1 class="section-title">ショッピングカート</h1>
-            
-            <div class="cart-content">
-                <div class="cart-items-container">
-                    <div id="cart-items">
-                        <!-- カートアイテムがここに表示されます -->
-                    </div>
-                    <div id="empty-cart" class="empty-cart" style="display: none;">
-                        <i class="fas fa-shopping-cart"></i>
-                        <p>カートは空です</p>
-                        <a href="index.html#packages" class="btn btn-primary">パッケージを見る</a>
-                    </div>
-                </div>
+            <div class="breadcrumb">
+                <a href="index.html">ホーム</a> / <a href="index.html#packages">パッケージ</a> / <span id="breadcrumb-name">商品詳細</span>
+            </div>
+            <div id="product-detail" class="product-detail">
+                <div class="loading">読み込み中...</div>
+            </div>
+        </div>
+    </section>
 
-                <div class="cart-summary">
-                    <h3>ご注文内容</h3>
-                    <div class="summary-row">
-                        <span>小計</span>
-                        <span id="subtotal">¥0</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>配送料</span>
-                        <span id="shipping">¥0</span>
-                    </div>
-                    <div class="summary-row">
-                        <span>消費税</span>
-                        <span id="tax">¥0</span>
-                    </div>
-                    <div class="summary-divider"></div>
-                    <div class="summary-row total">
-                        <span>合計</span>
-                        <span id="total">¥0</span>
-                    </div>
-                    <button id="checkout-btn" class="btn btn-accent checkout-btn">
-                        レジに進む
-                    </button>
-                    <a href="index.html#packages" class="continue-shopping">
-                        <i class="fas fa-arrow-left"></i> お買い物を続ける
-                    </a>
-                </div>
+    <!-- 関連商品セクション -->
+    <section class="related-products-section">
+        <div class="container">
+            <h2 class="section-title">関連商品</h2>
+            <div id="related-products" class="products-grid">
+                <div class="loading">読み込み中...</div>
             </div>
         </div>
     </section>
@@ -99,7 +73,6 @@
                     <ul>
                         <li><a href="index.html#home">ホーム</a></li>
                         <li><a href="index.html#packages">パッケージ</a></li>
-                        <li><a href="index.html#products">商品一覧</a></li>
                         <li><a href="index.html#about">私たちについて</a></li>
                     </ul>
                 </div>
@@ -133,6 +106,6 @@
     </footer>
 
     <script src="js/cart.js"></script>
-    <script src="js/cart-page.js"></script>
+    <script src="js/product.js"></script>
 </body>
 </html>

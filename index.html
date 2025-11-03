@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="js/translations.js"></script>
+    <script src="js/i18n.js"></script>
 </head>
 <body>
     <!-- ヘッダー -->
@@ -18,10 +20,10 @@
                     <p class="logo-subtitle">ホテルライクな暮らしを</p>
                 </div>
                 <ul class="nav-menu">
-                    <li><a href="#home">ホーム</a></li>
-                    <li><a href="#packages">パッケージ</a></li>
-                    <li><a href="#products">商品一覧</a></li>
-                    <li><a href="#about">私たちについて</a></li>
+                    <li><a href="#home" data-i18n="nav.home">ホーム</a></li>
+                    <li><a href="#packages" data-i18n="nav.packages">パッケージ</a></li>
+                    <li><a href="#about" data-i18n="nav.about">私たちについて</a></li>
+                    <li><button id="language-toggle" class="language-toggle"><i class="fas fa-globe"></i> EN</button></li>
                     <li><a href="cart.html" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count">0</span>
@@ -40,17 +42,17 @@
     <section id="home" class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h2 class="hero-title">ホテルライクな暮らしを、<br>初日から。</h2>
-            <p class="hero-subtitle">洗練された空間で、理想の生活を始めませんか？</p>
-            <a href="#packages" class="btn btn-primary">パッケージを見る</a>
+            <h2 class="hero-title" data-i18n="hero.title">ホテルライクな暮らしを、<br>初日から。</h2>
+            <p class="hero-subtitle" data-i18n="hero.subtitle">洗練された空間で、理想の生活を始めませんか？</p>
+            <a href="#packages" class="btn btn-primary" data-i18n="hero.cta">パッケージを見る</a>
         </div>
     </section>
 
     <!-- パッケージセクション -->
     <section id="packages" class="packages-section">
         <div class="container">
-            <h2 class="section-title">おすすめパッケージ</h2>
-            <p class="section-subtitle">新生活に必要な家具・家電をワンストップで。</p>
+            <h2 class="section-title" data-i18n="packages.title">おすすめパッケージ</h2>
+            <p class="section-subtitle" data-i18n="packages.subtitle">新生活に必要な家具・家電をワンストップで。</p>
             <div id="packages-grid" class="packages-grid">
                 <!-- パッケージはJavaScriptで動的に読み込まれます -->
                 <div class="loading">読み込み中...</div>
@@ -58,18 +60,36 @@
         </div>
     </section>
 
-    <!-- 商品セクション -->
+    <!-- 商品セクション（非表示） -->
+    <!--
     <section id="products" class="products-section">
         <div class="container">
-            <h2 class="section-title">商品一覧</h2>
+            <h2 class="section-title" data-i18n="products.title">商品一覧</h2>
             <div class="filter-buttons">
-                <button class="filter-btn active" data-filter="all">すべて</button>
-                <button class="filter-btn" data-filter="furniture">家具</button>
-                <button class="filter-btn" data-filter="appliance">家電</button>
+                <button class="filter-btn active" data-filter="all" data-i18n="filter.all">すべて</button>
+                <button class="filter-btn" data-filter="furniture" data-i18n="filter.furniture">家具</button>
+                <button class="filter-btn" data-filter="appliance" data-i18n="filter.appliance">家電</button>
             </div>
             <div id="products-grid" class="products-grid">
-                <!-- 商品はJavaScriptで動的に読み込まれます -->
                 <div class="loading">読み込み中...</div>
+            </div>
+        </div>
+    </section>
+    -->
+
+    <!-- カタログダウンロードセクション -->
+    <section class="catalog-section">
+        <div class="container">
+            <div class="catalog-content">
+                <div class="catalog-icon">
+                    <i class="fas fa-file-pdf"></i>
+                </div>
+                <h2 class="catalog-title" data-i18n="catalog.title">カタログダウンロード</h2>
+                <p class="catalog-description" data-i18n="catalog.description">詳細なパッケージ情報や商品カタログをダウンロードいただけます。</p>
+                <a href="#" id="catalog-download-btn" class="btn btn-accent catalog-btn">
+                    <i class="fas fa-download"></i> <span data-i18n="catalog.button">カタログをダウンロード</span>
+                </a>
+                <p class="catalog-note" data-i18n="catalog.note">※ダウンロードにはメールアドレスの登録が必要です</p>
             </div>
         </div>
     </section>
@@ -79,24 +99,24 @@
         <div class="container">
             <div class="about-content">
                 <div class="about-text">
-                    <h2 class="section-title">Well Planningについて</h2>
-                    <p>Well Planningは、ホテルライクな暮らしをコンセプトに、洗練されたインテリアコーディネートサービスを提供しています。</p>
-                    <p>新生活を始める方、引越しを考えている方、お部屋の模様替えをしたい方に、厳選された家具・家電をパッケージでご提供。初日から快適で美しい暮らしを実現します。</p>
+                    <h2 class="section-title" data-i18n="about.title">Well Planningについて</h2>
+                    <p data-i18n="about.description1">Well Planningは、ホテルライクな暮らしをコンセプトに、洗練されたインテリアコーディネートサービスを提供しています。</p>
+                    <p data-i18n="about.description2">新生活を始める方、引越しを考えている方、お部屋の模様替えをしたい方に、厳選された家具・家電をパッケージでご提供。初日から快適で美しい暮らしを実現します。</p>
                     <div class="about-features">
                         <div class="feature-item">
                             <i class="fas fa-box-open"></i>
-                            <h3>ワンストップ</h3>
-                            <p>必要なものが全て揃うパッケージ</p>
+                            <h3 data-i18n="about.feature1.title">ワンストップ</h3>
+                            <p data-i18n="about.feature1.text">必要なものが全て揃うパッケージ</p>
                         </div>
                         <div class="feature-item">
                             <i class="fas fa-palette"></i>
-                            <h3>洗練されたデザイン</h3>
-                            <p>プロが厳選した上質な家具・家電</p>
+                            <h3 data-i18n="about.feature2.title">洗練されたデザイン</h3>
+                            <p data-i18n="about.feature2.text">プロが厳選した上質な家具・家電</p>
                         </div>
                         <div class="feature-item">
                             <i class="fas fa-shipping-fast"></i>
-                            <h3>迅速な配送</h3>
-                            <p>スムーズな新生活スタートをサポート</p>
+                            <h3 data-i18n="about.feature3.title">迅速な配送</h3>
+                            <p data-i18n="about.feature3.text">スムーズな新生活スタートをサポート</p>
                         </div>
                     </div>
                 </div>
@@ -110,25 +130,41 @@
             <div class="footer-content">
                 <div class="footer-section">
                     <h3>Well Planning</h3>
-                    <p>ホテルライクな暮らしを、初日から。</p>
+                    <p data-i18n="footer.tagline">ホテルライクな暮らしを、初日から。</p>
                 </div>
                 <div class="footer-section">
-                    <h4>リンク</h4>
+                    <h4 data-i18n="footer.links">リンク</h4>
                     <ul>
-                        <li><a href="#home">ホーム</a></li>
-                        <li><a href="#packages">パッケージ</a></li>
-                        <li><a href="#products">商品一覧</a></li>
-                        <li><a href="#about">私たちについて</a></li>
+                        <li><a href="#home" data-i18n="nav.home">ホーム</a></li>
+                        <li><a href="#packages" data-i18n="nav.packages">パッケージ</a></li>
+                        <li><a href="#about" data-i18n="nav.about">私たちについて</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
-                    <h4>お問い合わせ</h4>
+                    <h4 data-i18n="footer.contact">お問い合わせ</h4>
                     <p>Email: info@wellplanning.com</p>
-                    <p>Tel: 03-1234-5678</p>
+                    <div class="social-links">
+                        <h5 data-i18n="footer.followUs">Follow Us</h5>
+                        <div class="qr-codes-wrapper">
+                            <div class="qr-code-container">
+                                <img src="https://page.gensparksite.com/v1/base64_upload/998923250c615ae556e6edf85199726d" alt="Instagram QR Code" class="social-qr-code">
+                                <p class="qr-description">Instagram</p>
+                            </div>
+                            <div class="qr-code-container">
+                                <img src="https://page.gensparksite.com/v1/base64_upload/94cd5f016c076479818602a446daec37" alt="YouTube QR Code" class="social-qr-code">
+                                <p class="qr-description">YouTube</p>
+                            </div>
+                            <div class="qr-code-container">
+                                <img src="https://page.gensparksite.com/v1/base64_upload/7dd63d752ad5d4811a66459d75d647ff" alt="Spotify QR Code" class="social-qr-code">
+                                <p class="qr-description">Spotify</p>
+                            </div>
+                        </div>
+                        <p class="qr-scan-text" data-i18n="footer.scanQR">スキャンしてフォロー</p>
+                    </div>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 Well Planning. All rights reserved.</p>
+                <p data-i18n="footer.copyright">&copy; 2024 Well Planning. All rights reserved.</p>
             </div>
         </div>
     </footer>

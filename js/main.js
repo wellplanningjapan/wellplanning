@@ -19,6 +19,17 @@ async function loadPackages() {
         }
         const data = await response.json();
         allPackages = data.data || [];
+        
+        // カスタム画像URLを設定
+        allPackages.forEach(pkg => {
+            if (pkg.id === 'package_2' || pkg.name.includes('スタンダード')) {
+                pkg.image_url = 'https://page.gensparksite.com/v1/base64_upload/ff26f281f12d318377a1d0e91169faae';
+            }
+            if (pkg.id === 'package_3' || pkg.name.includes('プレミアム')) {
+                pkg.image_url = 'https://page.gensparksite.com/v1/base64_upload/ff26f281f12d318377a1d0e91169faae';
+            }
+        });
+        
         displayPackages(allPackages);
     } catch (error) {
         console.error('パッケージの読み込みエラー:', error);
@@ -32,27 +43,40 @@ function displayPackages(packages) {
     const packagesGrid = document.getElementById('packages-grid');
     
     if (packages.length === 0) {
-        packagesGrid.innerHTML = '<p class="no-products">パッケージが見つかりませんでした。</p>';
+        packagesGrid.innerHTML = `<p class="no-products">${i18n.translate('message.noProducts')}</p>`;
         return;
     }
 
-    packagesGrid.innerHTML = packages.map(pkg => `
-        <div class="package-card" onclick="addPackageToCart('${pkg.id}')">
-            <img src="${pkg.image_url}" alt="${pkg.name}" class="package-image">
+    packagesGrid.innerHTML = packages.map(pkg => {
+        const isComingSoon = pkg.id === 'package_1' || pkg.name.includes('スターター');
+        const comingSoonBadge = isComingSoon ? `<div class="coming-soon-badge">${i18n.currentLanguage === 'ja' ? '準備中' : 'Coming Soon'}</div>` : '';
+        const cardClass = isComingSoon ? 'package-card coming-soon' : 'package-card';
+        const cardOnclick = isComingSoon ? '' : `onclick="addPackageToCart('${pkg.id}')"`;
+        
+        return `
+        <div class="${cardClass}" ${cardOnclick}>
+            ${comingSoonBadge}
+            <img src="${pkg.image_url}" alt="${i18n.translatePackageName(pkg.id, pkg.name)}" class="package-image">
             <div class="package-content">
-                <h3 class="package-name">${pkg.name}</h3>
-                <p class="package-description">${pkg.description}</p>
+                <h3 class="package-name">${i18n.translatePackageName(pkg.id, pkg.name)}</h3>
+                <p class="package-description">${i18n.translatePackageDescription(pkg.id, pkg.description)}</p>
                 <div class="package-price">${formatPrice(pkg.price)}</div>
                 <div class="package-items">
-                    <div class="package-items-label">含まれる商品</div>
-                    <div class="package-items-count">${pkg.items ? pkg.items.length : 0}点</div>
+                    <div class="package-items-label" data-i18n="packages.items">${i18n.translate('packages.items')}</div>
+                    <div class="package-items-count">${pkg.items ? pkg.items.length : 0}${i18n.translate('packages.items.count')}</div>
                 </div>
-                <button class="btn btn-primary" onclick="event.stopPropagation(); addPackageToCart('${pkg.id}')">
-                    <i class="fas fa-shopping-cart"></i> カートに追加
-                </button>
+                ${isComingSoon ? 
+                    `<button class="btn btn-secondary" disabled>
+                        <i class="fas fa-clock"></i> <span>${i18n.currentLanguage === 'ja' ? '準備中' : 'Coming Soon'}</span>
+                    </button>` :
+                    `<button class="btn btn-primary" onclick="event.stopPropagation(); addPackageToCart('${pkg.id}')">
+                        <i class="fas fa-shopping-cart"></i> <span data-i18n="packages.addToCart">${i18n.translate('packages.addToCart')}</span>
+                    </button>`
+                }
             </div>
         </div>
-    `).join('');
+        `;
+    }).join('');
 }
 
 // 商品を読み込み
@@ -77,19 +101,19 @@ function displayProducts(products) {
     const productsGrid = document.getElementById('products-grid');
     
     if (products.length === 0) {
-        productsGrid.innerHTML = '<p class="no-products">商品が見つかりませんでした。</p>';
+        productsGrid.innerHTML = `<p class="no-products">${i18n.translate('message.noProducts')}</p>`;
         return;
     }
 
     productsGrid.innerHTML = products.map(product => `
         <div class="product-card" onclick="goToProductDetail('${product.id}')">
-            <img src="${product.image_url}" alt="${product.name}" class="product-image">
+            <img src="${product.image_url}" alt="${i18n.translateProductName(product.id, product.name)}" class="product-image">
             <div class="product-content">
-                <div class="product-category">${getCategoryLabel(product.category)}</div>
-                <h3 class="product-name">${product.name}</h3>
+                <div class="product-category">${i18n.translateCategoryLabel(product.category)}</div>
+                <h3 class="product-name">${i18n.translateProductName(product.id, product.name)}</h3>
                 <div class="product-price">${formatPrice(product.price)}</div>
                 <button class="btn btn-primary" onclick="event.stopPropagation(); addProductToCart('${product.id}')">
-                    <i class="fas fa-shopping-cart"></i> カートに追加
+                    <i class="fas fa-shopping-cart"></i> <span data-i18n="products.addToCart">${i18n.translate('products.addToCart')}</span>
                 </button>
             </div>
         </div>
@@ -147,6 +171,22 @@ function addPackageToCart(packageId) {
         cart.addPackage(pkg, 1);
     }
 }
+
+// カタログダウンロードボタン
+// ★★★ GoogleフォームのURLをここに設定してください ★★★
+// 例: const CATALOG_FORM_URL = 'https://forms.gle/xxxxx';
+const CATALOG_FORM_URL = '#'; // ← ここにGoogleフォームのURLを入れてください
+
+document.addEventListener('DOMContentLoaded', () => {
+    const catalogBtn = document.getElementById('catalog-download-btn');
+    if (catalogBtn) {
+        catalogBtn.href = CATALOG_FORM_URL;
+        // 外部リンクの場合は新しいタブで開く
+        if (CATALOG_FORM_URL !== '#') {
+            catalogBtn.target = '_blank';
+        }
+    }
+});
 
 // スムーススクロール
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
