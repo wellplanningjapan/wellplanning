@@ -1,6 +1,4 @@
-allPackages.forEach(pkg => {
-    pkg.image_url = 'https://www.wellplanningjapan.com/images/hotel-room.jpg';
-});// メインページのJavaScript
+
 
 let allProducts = [];
 let allPackages = [];
@@ -24,8 +22,8 @@ async function loadPackages() {
         
        // カスタム画像URLを設定
 allPackages.forEach(pkg => {
-    pkg.image_url = 'https://www.wellplanningjapan.com/images/hotel-room.jpg';
-});
+     pkg.image_url = '/images/hotel-room.jpg'; // 👈 相対パスに修正
+ });
 
 displayPackages(allPackages);
         });
