@@ -20,14 +20,12 @@ async function loadPackages() {
         const data = await response.json();
         allPackages = data.data || [];
         
-        // カスタム画像URLを設定
-        allPackages.forEach(pkg => {
-            if (pkg.id === 'package_2' || pkg.name.includes('スタンダード')) {
-                pkg.image_url = 'images/hotel-room.jpg';
-            }
-            if (pkg.id === 'package_3' || pkg.name.includes('プレミアム')) {
-                pkg.image_url = 'images/hotel-room.jpg';
-            }
+       // カスタム画像URLを設定
+allPackages.forEach(pkg => {
+    pkg.image_url = 'https://www.wellplanningjapan.com/images/hotel-room.jpg';
+});
+
+displayPackages(allPackages);
         });
         
         displayPackages(allPackages);
